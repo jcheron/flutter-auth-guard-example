@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class AuthenticationService {
-  final _userController = ReplaySubject<String>(maxSize: 1);
+  final _userController = ReplaySubject<String?>(maxSize: 1);
 
   AuthenticationService() {
     Future.delayed(Duration(seconds: 10)).then((value) => _userController.add(null)); //Simulate loading
@@ -18,7 +18,7 @@ class AuthenticationService {
     _userController.sink.add(null);
   }
 
-  Stream<String> user() {
+  Stream<String?> user() {
     return _userController.asBroadcastStream();
   }
 
@@ -28,10 +28,10 @@ class AuthenticationService {
 }
 class AuthenticationProvider extends InheritedWidget {
   final service = AuthenticationService();
-  AuthenticationProvider({Key key, child}) : super(key: key, child: child);
+  AuthenticationProvider({Key? key, child}) : super(key: key, child: child);
 
-  static AuthenticationService of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(AuthenticationProvider)as AuthenticationProvider).service;
+  static AuthenticationService? of(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<AuthenticationProvider>())?.service;
   }
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auth_guard/auth_guard.dart';
 import 'package:auth_guard/authentication.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +11,20 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         initialRoute: '/',
         routes: {
-          '/': (context) => AuthGuard(
-            loadingScreen: LoadingScreen(),
-            unauthenticatedHandler: (BuildContext context) => Navigator.of(context).pushReplacementNamed('/login'),
-            authenticationStream: AuthenticationProvider.of(context).user()
-              .map((user) => user == null ? AuthGuardStatus.notAuthenticated : AuthGuardStatus.authenticated),
-            child: HomeScreen(),
-            
-          ),
+          '/': (context) => _authGuard(context, HomeScreen()),
           '/login': (context) => LoginScreen(),
         },
       ),
+    );
+  }
+  _authGuard(BuildContext context,Widget page){
+    return AuthGuard(
+      loadingScreen: LoadingScreen(),
+      unauthenticatedHandler: (BuildContext context) => Navigator.of(context).pushReplacementNamed('/login'),
+      authenticationStream: AuthenticationProvider.of(context)?.user()
+          .map((user) => user == null ? AuthGuardStatus.notAuthenticated : AuthGuardStatus.authenticated),
+      child: page,
+
     );
   }
 }
@@ -37,9 +38,9 @@ class HomeScreen extends StatelessWidget {
         title: Text('Home screen'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text('Logout'),
-          onPressed: () => AuthenticationProvider.of(context).logout(),
+          onPressed: () => AuthenticationProvider.of(context)?.logout(),
         ),
       ),
     );
@@ -55,10 +56,10 @@ class LoginScreen extends StatelessWidget {
         title: Text('Login'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text('Login'),
           onPressed: () {
-              AuthenticationProvider.of(context).login();
+              AuthenticationProvider.of(context)?.login();
               Navigator.of(context).pushReplacementNamed('/');
             },
         ),

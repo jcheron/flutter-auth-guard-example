@@ -12,22 +12,14 @@ class AuthGuard extends StatefulWidget {
   final Widget child;
   final Widget loadingScreen;
   final AuthGuardUnauthenticatedHandler unauthenticatedHandler;
-  final Stream<AuthGuardStatus> authenticationStream;
+  final Stream<AuthGuardStatus>? authenticationStream;
 
   AuthGuard({
-      @required
-      this.child,
-      @required
-      this.loadingScreen,
-      @required
-      this.unauthenticatedHandler,
-      @required
-      this.authenticationStream,
+      required this.child,
+      required this.loadingScreen,
+      required this.unauthenticatedHandler,
+      required this.authenticationStream,
     }) {
-    assert(this.child != null);
-    assert(this.loadingScreen != null);
-    assert(this.unauthenticatedHandler != null);
-    assert(this.authenticationStream != null);
   }
 
   @override
@@ -37,24 +29,21 @@ class AuthGuard extends StatefulWidget {
 }
 
 class _AuthGuardState extends State<AuthGuard> {
-  StreamSubscription<AuthGuardStatus> _subscription;
-  Widget currentWidget;
+  late StreamSubscription<AuthGuardStatus>? _subscription;
+  late Widget currentWidget;
 
   @override
   void initState() {
     super.initState();
     currentWidget = widget.loadingScreen;
-    _subscription = widget.authenticationStream.listen(_onAuthenticationChange);
+    _subscription = widget.authenticationStream?.listen(_onAuthenticationChange);
   }
 
   @override
   void dispose() {
     super.dispose();
     print('Dispose');
-    if (_subscription != null) {
-       _subscription.cancel();
-       _subscription = null;
-    }
+     _subscription?.cancel();
   }
 
   @override
