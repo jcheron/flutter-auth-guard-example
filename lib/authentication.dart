@@ -1,24 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 class AuthenticationService {
-  final _userController = ReplaySubject<String?>(maxSize: 1);
+  final _userController = ReplaySubject<User?>(maxSize: 1);
 
   AuthenticationService() {
     Future.delayed(Duration(seconds: 10)).then((value) => _userController.add(null)); //Simulate loading
   }
 
-  void login() {
-    _userController.sink.add('User');
+  void login(User? connectedUser) {
+    _userController.sink.add(connectedUser);
   }
 
   void logout() {
     _userController.sink.add(null);
   }
 
-  Stream<String?> user() {
+  Stream<User?> user() {
     return _userController.asBroadcastStream();
   }
 
